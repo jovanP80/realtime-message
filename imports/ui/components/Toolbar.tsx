@@ -2,11 +2,10 @@ import React from 'react';
 
 type Props = {
   paused: boolean;
-  count: number;
   onTogglePause: () => void;
 };
 
-export const Toolbar: React.FC<Props> = ({ paused, count, onTogglePause }) => {
+export const Toolbar: React.FC<Props> = ({ paused, onTogglePause }) => {
   return (
     <div className="card shadow-sm border-0 mb-3">
       <div className="card-body py-2 d-flex align-items-center">
@@ -14,9 +13,6 @@ export const Toolbar: React.FC<Props> = ({ paused, count, onTogglePause }) => {
           <span className={`badge rounded-pill ${paused ? 'text-dark bg-warning' : 'bg-success'}`}>
             <i className={`bi me-1 ${paused ? 'bi-pause-circle' : 'bi-broadcast-pin'}`}></i>
             {paused ? 'Paused' : 'Live'}
-          </span>
-          <span className="text-muted small">
-            Showing <span className="fw-semibold">{count.toLocaleString()}</span>
           </span>
         </div>
         <div className="ms-auto d-flex gap-2">

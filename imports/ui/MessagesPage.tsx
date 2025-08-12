@@ -150,9 +150,9 @@ export const MessagesPage: React.FC = () => {
 
   return (
     <div className="container py-3">
-      <Toolbar paused={paused} onTogglePause={togglePause} count={messages.length} />
-
-      <FiltersBar
+      <Toolbar paused={paused} onTogglePause={togglePause} />
+ 
+       <FiltersBar
         filters={filtersDraft}
         onChange={setFiltersDraft}
         sourceOptions={sourceOptions}
