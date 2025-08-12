@@ -96,17 +96,24 @@ Meteor.startup(async () => {
   Meteor.publish('messageSources', function () {
     const subscription = this;
     const knownSources = new Set<string>();
-    const handle = MessagesCollection.find({}, { fields: { source: 1 } }).observeChanges({
-      added(_id, fields: Partial<MessageDoc>) {
-        const s = fields.source as string | undefined;
-        if (typeof s === 'string' && !knownSources.has(s)) {
-          knownSources.add(s);
-          subscription.added('message_sources', s, { value: s });
-        }
-      },
-    });
+    const cursor = MessagesCollection.find({}, { fields: { source: 1 } }) as any;
+    const handle = typeof cursor.observeChanges === 'function'
+      ? cursor.observeChanges({
+          added(_id: string, fields: Partial<MessageDoc>) {
+            const s = fields.source as string | undefined;
+            if (typeof s === 'string' && !knownSources.has(s)) {
+              knownSources.add(s);
+              subscription.added('message_sources', s, { value: s });
+            }
+          },
+        })
+      : undefined;
     subscription.ready();
-    subscription.onStop(() => handle.stop());
+    subscription.onStop(() => {
+      if (handle && typeof handle.stop === 'function') {
+        try { handle.stop(); } catch {}
+      }
+    });
   });
 
   // Server-side generator of random messages
